@@ -1,0 +1,30 @@
+api:
+    auth_token: JWTTOKEN
+    public_jwt_cert: PUBLICCERT
+    hostnames: [ "APIHOSTNAME" ]
+    port: SERVER_PORT
+    hostname_refresh_interval: 30
+    schema: https
+rdp-gateway:
+    id: 00000000-0000-0000-0000-000000000000
+    registration_token: REGISTRATION_TOKEN
+    server_address: SERVER_ADDRESS
+    server_port: SERVER_PORT
+    zone: ZONE
+    keepalive_loop_interval: 30
+    kubernetes: false
+    kasm_delete_session_watch_interval: 60
+logging:
+    console_level: "DEBUG"
+    file_logging:
+        filename: "/data/kasm/current/log/rdp_https_gateway.log"
+        level: "DEBUG"
+        backupCount: 20
+        maxMegaBytes: 10
+    json_file_logging:
+        filename: "/data/kasm/current/log/rdp_https_gateway_json.log"
+        level: "DEBUG"
+        backupCount: 20
+        maxMegaBytes: 10
+    network_logging:
+        level: "DEBUG"

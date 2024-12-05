@@ -1,0 +1,13 @@
+Server:
+ CertFile: /data/rdpgw/server.pem
+ KeyFile: /data/rdpgw/key.pem
+ GatewayAddress: localhost:9443
+ Port: 9443
+ RoundRobin: false
+ HostSelection: any
+ Hosts:
+  - localhost:3389
+Caps:
+ TokenAuth: false
+ KasmAuth: true
+ RedirectAll: true

@@ -1,0 +1,72 @@
+version: '3'
+services:
+  kasm_api:
+    container_name: kasm_api
+    user: "${KASM_UID?}:${KASM_GID?}"
+    image: "kasmweb/api:1.16.1"
+    read_only: true
+    networks:
+      - kasm_default_network
+    volumes:
+      - /data/kasm/1.16.1:/data/kasm/current
+      - /data/kasm/1.16.1/tmp/api:/tmp
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+  kasm_manager:
+    container_name: kasm_manager
+    user: "${KASM_UID?}:${KASM_GID?}"
+    image: "kasmweb/manager:1.16.1"
+    networks:
+      - kasm_default_network
+    volumes:
+      - /data/kasm/1.16.1:/data/kasm/current
+      - /data/kasm/1.16.1/tmp/manager:/tmp
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+  proxy:
+    container_name: kasm_proxy
+    image: "kasmweb/proxy:1.16.1"
+    ports:
+      - "443:443"
+    networks:
+      - kasm_default_network
+    volumes:
+      - /data/kasm/1.16.1/conf/nginx:/etc/nginx/conf.d:ro
+      - /data/kasm/1.16.1/certs/kasm_nginx.key:/etc/ssl/private/kasm_nginx.key
+      - /data/kasm/1.16.1/certs/kasm_nginx.crt:/etc/ssl/certs/kasm_nginx.crt
+      - /data/kasm/1.16.1/log/nginx:/var/log/external/nginx/
+      - /data/kasm/1.16.1/log/logrotate:/var/log/external/logrotate/
+    depends_on:
+      - kasm_manager
+      - kasm_api
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+  kasm_share:
+    container_name: kasm_share
+    user: root
+    image: "kasmweb/share:1.16.1"
+    networks:
+      - kasm_default_network
+    volumes:
+      - /data/kasm/1.16.1:/data/kasm/current
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+networks:
+  kasm_default_network:
+    external: true
